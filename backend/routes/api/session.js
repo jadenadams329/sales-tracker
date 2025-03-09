@@ -9,6 +9,15 @@ const router = express.Router();
 router.post("/", async (req, res, next) => {
 	const { email, password } = req.body;
 
+    // First check if both email and password are provided
+	if (!email || !password) {
+		const err = new Error("Login failed");
+		err.status = 401;
+		err.title = "Login failed";
+		err.errors = { credential: "The provided credentials were invalid." };
+		return next(err);
+	}
+
 	const user = await User.unscoped().findOne({
 		where: {
 			email,
