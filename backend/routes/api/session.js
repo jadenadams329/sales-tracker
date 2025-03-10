@@ -9,7 +9,7 @@ const router = express.Router();
 router.post("/", async (req, res, next) => {
 	const { email, password } = req.body;
 
-    // First check if both email and password are provided
+	// First check if both email and password are provided
 	if (!email || !password) {
 		const err = new Error("Login failed");
 		err.status = 401;
@@ -45,6 +45,12 @@ router.post("/", async (req, res, next) => {
 	return res.json({
 		user: safeUser,
 	});
+});
+
+//log out
+router.delete("/", (req, res) => {
+	res.clearCookie("token");
+	return res.json({ message: "success" });
 });
 
 module.exports = router;
