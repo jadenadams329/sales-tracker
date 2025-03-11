@@ -22,7 +22,6 @@ const validateSignup = [
 		.exists({ checkFalsy: true })
 		.isLength({ min: 1 })
 		.withMessage("Last Name must be 1 character or more"),
-	check("role").exists({ checkFalsy: true }).withMessage("Role must be assigned"),
 	check("role")
 		.exists({ checkFalsy: true })
 		.withMessage("Role must be assigned")
