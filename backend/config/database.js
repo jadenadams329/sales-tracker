@@ -8,6 +8,13 @@ module.exports = {
     logQueryParameters: true,
     typeValidation: true
   },
+  test: {
+    // Use a default test database path if DB_FILE is not set
+    storage: ':memory:',
+    dialect: "sqlite",
+    logging: false,
+    seederStorage: "sequelize"
+  },
   production: {
     use_env_variable: 'DATABASE_URL',
     dialect: 'postgres',
