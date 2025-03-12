@@ -40,8 +40,7 @@ module.exports = (sequelize, DataTypes) => {
 			  }
 			}
 			if (serviced && serviced !== "") {
-			  where.serviced = serviced; // Assuming 'serviced' is the correct field name
-			  // console.log(where); // Removed debug log
+			  where.serviced = serviced; 
 			}
 
 			// Set up query options with the where clause
