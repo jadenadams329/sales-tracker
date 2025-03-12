@@ -47,7 +47,7 @@ module.exports = {
         type: Sequelize.DATEONLY,
         allowNull: false
       },
-      servcied: {
+      serviced: {
         type: Sequelize.ENUM("Pending", "Yes", "No"),
         allowNull: false
       },
