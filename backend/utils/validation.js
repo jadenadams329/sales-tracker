@@ -114,9 +114,56 @@ const validateCreateSale = [
 	handleValidationErrors,
 ];
 
+const validateUpdateSale = [
+	// accountNumber: Optional, if present must be an integer >= 1
+	check("accountNumber")
+		.optional()
+		.isInt({ min: 1 })
+		.withMessage("Account number must be an integer greater than or equal to 1"),
+
+	// agreementLength: Optional, if present must be one of the ENUM values
+	check("agreementLength")
+		.optional()
+		.isIn(["One-time", "12 Months", "24 Months"])
+		.withMessage("Agreement length must be 'One-time', '12 Months', or '24 Months'"),
+
+	// planType: Optional, if present must be one of the ENUM values
+	check("planType")
+		.optional()
+		.isIn(["One-time", "Basic", "Pro", "Premium"])
+		.withMessage("Plan type must be 'One-time', 'Basic', 'Pro', or 'Premium'"),
+
+	// initialPrice: Optional, if present must be a decimal number
+	check("initialPrice")
+		.optional()
+		.isDecimal({ min: 0 })
+		.withMessage("Initial price must be a number greater than or equal to 0"),
+
+	// monthlyPrice: Optional, if present must be a decimal number
+	check("monthlyPrice").optional().isDecimal({ min: 1 }).withMessage("Monthly price must be a number greater than 1"),
+
+	// autopay: Optional, if present must be one of the ENUM values
+	check("autopay").optional().isIn(["None", "CC", "ACH"]).withMessage("Autopay must be 'None', 'CC', or 'ACH'"),
+
+	// serviceDate: Optional, if present must be a date in MM-DD-YYYY format
+	check("serviceDate")
+		.optional()
+		.isDate({ format: "MM-DD-YYYY", strictMode: true })
+		.withMessage("Service date must be a valid date in MM-DD-YYYY format"),
+
+	// serviced: Optional, if present must be one of the ENUM values
+	check("serviced").optional().isIn(["Yes", "No", "Pending"]).withMessage("Serviced must be 'Yes', 'No', or 'Pending'"),
+
+	// notes: Optional, if present must be a string
+	check("notes").optional().isString().withMessage("Notes must be a string"),
+
+	handleValidationErrors,
+];
+
 module.exports = {
 	handleValidationErrors,
 	validateSaleQueryParams,
 	validateCreateSale,
 	validateSignup,
+	validateUpdateSale,
 };

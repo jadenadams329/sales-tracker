@@ -1,35 +1,90 @@
 const express = require("express");
 const { requireAuth } = require("../../utils/auth");
 const { Sale } = require("../../db/models");
-const { validateSaleQueryParams, validateCreateSale } = require("../../utils/validation");
+const { validateSaleQueryParams, validateCreateSale, validateUpdateSale } = require("../../utils/validation");
 
 const router = express.Router();
 
+//update a sale by id
+router.put("/:id", requireAuth, validateUpdateSale, async (req, res, next) => {
+	try {
+		const saleId = req.params.id;
+		const { user } = req;
+		const sale = await Sale.findByPk(saleId);
+
+		if (!sale) {
+			const err = new Error("Sale not found");
+			err.title = "Not Found";
+			err.status = 404;
+			return next(err);
+		}
+
+		if (sale.userId !== user.id) {
+			const err = new Error("Forbidden - Only the user who created the sale can update this sale");
+			err.title = "Forbidden";
+			err.status = 403;
+			return next(err);
+		}
+
+		const {
+			accountNumber,
+			agreementLength,
+			planType,
+			initialPrice,
+			monthlyPrice,
+			autopay,
+			serviceDate,
+			serviced,
+			notes,
+		} = req.body;
+
+		await sale.update({
+			accountNumber,
+			agreementLength,
+			planType,
+			initialPrice,
+			monthlyPrice,
+			autopay,
+			serviceDate,
+			serviced,
+			notes,
+		});
+
+		return res.json({ sale });
+	} catch (err) {
+		next(err);
+	}
+});
+
 //Delete sale by ID
 router.delete("/:id", requireAuth, async (req, res, next) => {
-	const saleId = req.params.id;
-	const { user } = req;
-	const sale = await Sale.findByPk(saleId);
+	try {
+		const saleId = req.params.id;
+		const { user } = req;
+		const sale = await Sale.findByPk(saleId);
 
-	if (!sale) {
-		const err = new Error("Sale not found");
-		err.title = "Not Found";
-		err.status = 404;
-		return next(err);
+		if (!sale) {
+			const err = new Error("Sale not found");
+			err.title = "Not Found";
+			err.status = 404;
+			return next(err);
+		}
+
+		if (sale.userId !== user.id) {
+			const err = new Error("Forbidden - Only the user who created the sale can delete this sale");
+			err.title = "Forbidden";
+			err.status = 403;
+			return next(err);
+		}
+
+		await sale.destroy();
+
+		return res.json({
+			message: "Sale deleted",
+		});
+	} catch (err) {
+		next(err);
 	}
-
-	if (sale.userId !== user.id) {
-		const err = new Error("Forbidden - Only the user who created the sale can delete this sale");
-		err.title = "Forbidden";
-		err.status = 403;
-		return next(err);
-	}
-
-	await sale.destroy();
-
-	return res.json({
-		message: "Sale deleted",
-	});
 });
 
 //Get all sales
