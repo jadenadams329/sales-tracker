@@ -5,6 +5,33 @@ const { validateSaleQueryParams, validateCreateSale } = require("../../utils/val
 
 const router = express.Router();
 
+//Delete sale by ID
+router.delete("/:id", requireAuth, async (req, res, next) => {
+	const saleId = req.params.id;
+	const { user } = req;
+	const sale = await Sale.findByPk(saleId);
+
+	if (!sale) {
+		const err = new Error("Sale not found");
+		err.title = "Not Found";
+		err.status = 404;
+		return next(err);
+	}
+
+	if (sale.userId !== user.id) {
+		const err = new Error("Forbidden - Only the user who created the sale can delete this sale");
+		err.title = "Forbidden";
+		err.status = 403;
+		return next(err);
+	}
+
+	await sale.destroy();
+
+	return res.json({
+		message: "Sale deleted",
+	});
+});
+
 //Get all sales
 router.get("/", requireAuth, validateSaleQueryParams, async (req, res, next) => {
 	try {
