@@ -725,7 +725,8 @@ describe("Update Sale endpoint", () => {
 
 	it("should return 403 for sale owned by another user", async () => {
 		// Log out and log in as other user
-		await agent.post("/api/session").send({ email: otherUser.email, password: otherUser.password });
+		await agent.delete("/api/session").set("XSRF-TOKEN", agent.csrfToken).set("Accept", "application/json");
+		await agent.post("/api/session").set("XSRF-TOKEN", agent.csrfToken).send({ email: otherUser.email, password: otherUser.password });
 
 		const response = await agent
 			.put(`/api/sales/${saleId}`)
@@ -738,8 +739,12 @@ describe("Update Sale endpoint", () => {
 	});
 
 	it("should return 401 for unauthenticated requests", async () => {
-		const response = await request(app)
+		//Log out user
+		await agent.delete("/api/session").set("XSRF-TOKEN", agent.csrfToken).set("Accept", "application/json");
+
+		const response = await agent
 			.put(`/api/sales/${saleId}`)
+			.set("XSRF-TOKEN", agent.csrfToken)
 			.send({ accountNumber: 2002 })
 			.set("Accept", "application/json");
 
@@ -747,3 +752,162 @@ describe("Update Sale endpoint", () => {
 		expect(response.body.message).toBe("Authentication required");
 	});
 });
+
+describe("Delete Sale endpoint", () => {
+	const testUser = {
+	  email: "test@test.com",
+	  password: "password",
+	  firstName: "Test",
+	  lastName: "User",
+	  role: "Closer",
+	};
+  
+	const otherUser = {
+	  email: "other@test.com",
+	  password: "password",
+	  firstName: "Other",
+	  lastName: "User",
+	  role: "Closer",
+	};
+  
+	const agent = request.agent(app);
+	let saleId;
+  
+	const initialSaleData = {
+	  accountNumber: 1001,
+	  agreementLength: "One-time",
+	  planType: "Basic",
+	  initialPrice: 50.0,
+	  monthlyPrice: 0.0,
+	  autopay: "None",
+	  serviceDate: "2025-01-15",
+	  serviced: "Pending",
+	  notes: "Initial sale",
+	};
+  
+	beforeEach(async () => {
+	  await sequelize.sync({ force: true });
+	  await User.destroy({ where: {}, truncate: true, cascade: true });
+	  await Sale.destroy({ where: {}, truncate: true, cascade: true });
+  
+	  // Create test user
+	  const hashedPassword = bcrypt.hashSync(testUser.password, 10);
+	  const user = await User.create({
+		...testUser,
+		password: hashedPassword,
+	  });
+  
+	  // Create other user for forbidden test
+	  const otherHashedPassword = bcrypt.hashSync(otherUser.password, 10);
+	  await User.create({
+		...otherUser,
+		password: otherHashedPassword,
+	  });
+  
+	  // Create a sale for the test user
+	  const sale = await Sale.create({ ...initialSaleData, userId: user.id });
+	  saleId = sale.id;
+  
+	  // Log in the test user
+	  const csrfResponse = await agent.get("/api/csrf/restore");
+	  agent.csrfToken = csrfResponse.body["XSRF-Token"];
+  
+	  await agent
+		.post("/api/session")
+		.set("XSRF-TOKEN", agent.csrfToken)
+		.send({
+		  email: testUser.email,
+		  password: testUser.password,
+		});
+	});
+  
+	it("should successfully delete a sale owned by the authenticated user", async () => {
+	  const response = await agent
+		.delete(`/api/sales/${saleId}`)
+		.set("XSRF-TOKEN", agent.csrfToken)
+		.set("Accept", "application/json");
+  
+	  expect(response.status).toBe(200);
+	  expect(response.body).toEqual({ message: "Sale deleted" });
+  
+	  const sale = await Sale.findByPk(saleId);
+	  expect(sale).toBeNull();
+	});
+  
+	it("should return 404 for a non-existent sale", async () => {
+	  const invalidId = 999;
+  
+	  const response = await agent
+		.delete(`/api/sales/${invalidId}`)
+		.set("XSRF-TOKEN", agent.csrfToken)
+		.set("Accept", "application/json");
+  
+	  expect(response.status).toBe(404);
+	  expect(response.body.message).toBe("Sale not found");
+  
+	  const saleCount = await Sale.count();
+	  expect(saleCount).toBe(1); // Original sale still exists
+	});
+  
+	it("should return 403 when a different user attempts to delete the sale", async () => {
+	  // Log out and log in as other user
+	  await agent
+		.delete("/api/session")
+		.set("XSRF-TOKEN", agent.csrfToken)
+		.set("Accept", "application/json");
+	  await agent
+		.post("/api/session")
+		.set("XSRF-TOKEN", agent.csrfToken)
+		.send({
+		  email: otherUser.email,
+		  password: otherUser.password,
+		});
+  
+	  const response = await agent
+		.delete(`/api/sales/${saleId}`)
+		.set("XSRF-TOKEN", agent.csrfToken)
+		.set("Accept", "application/json");
+  
+	  expect(response.status).toBe(403);
+	  expect(response.body.message).toBe(
+		"Forbidden - Only the user who created the sale can delete this sale"
+	  );
+  
+	  const sale = await Sale.findByPk(saleId);
+	  expect(sale).not.toBeNull(); // Sale should still exist
+	});
+  
+	it("should return 401 for unauthenticated requests", async () => {
+	  // Log out the user
+	  await agent
+		.delete("/api/session")
+		.set("XSRF-TOKEN", agent.csrfToken)
+		.set("Accept", "application/json");
+  
+	  const response = await agent
+		.delete(`/api/sales/${saleId}`)
+		.set("XSRF-TOKEN", agent.csrfToken)
+		.set("Accept", "application/json");
+  
+	  expect(response.status).toBe(401);
+	  expect(response.body.message).toBe("Authentication required");
+  
+	  const sale = await Sale.findByPk(saleId);
+	  expect(sale).not.toBeNull(); // Sale should still exist
+	});
+  
+	it("should handle invalid sale ID format gracefully", async () => {
+	  const invalidId = "not-a-number";
+  
+	  const response = await agent
+		.delete(`/api/sales/${invalidId}`)
+		.set("XSRF-TOKEN", agent.csrfToken)
+		.set("Accept", "application/json");
+  
+	  expect(response.status).toBe(404);
+	  expect(response.body.message).toBe("Sale not found");
+  
+	  const saleCount = await Sale.count();
+	  expect(saleCount).toBe(1); // Original sale still exists
+	});
+  });
