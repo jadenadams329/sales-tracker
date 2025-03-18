@@ -17,12 +17,12 @@ module.exports = (sequelize, DataTypes) => {
 
 			// Convert page and size to numbers if provided
 			if (page) {
-			  page = +page;
-			  if (Number.isNaN(page) || page <= 0) page = 1;
+				page = +page;
+				if (Number.isNaN(page) || page <= 0) page = 1;
 			}
 			if (size) {
-			  size = +size;
-			  if (Number.isNaN(size) || size <= 0) size = 20;
+				size = +size;
+				if (Number.isNaN(size) || size <= 0) size = 20;
 			}
 
 			// Build the where clause starting with userId
@@ -30,17 +30,17 @@ module.exports = (sequelize, DataTypes) => {
 
 			// Add optional filters to the where clause
 			if (serviceDateFrom && serviceDateFrom !== "") {
-			  where.serviceDate = { [Op.gte]: serviceDateFrom };
+				where.serviceDate = { [Op.gte]: serviceDateFrom };
 			}
 			if (serviceDateTo && serviceDateTo !== "") {
-			  if (where.serviceDate) {
-				where.serviceDate[Op.lte] = serviceDateTo;
-			  } else {
-				where.serviceDate = { [Op.lte]: serviceDateTo };
-			  }
+				if (where.serviceDate) {
+					where.serviceDate[Op.lte] = serviceDateTo;
+				} else {
+					where.serviceDate = { [Op.lte]: serviceDateTo };
+				}
 			}
 			if (serviced && serviced !== "") {
-			  where.serviced = serviced; 
+				where.serviced = serviced;
 			}
 
 			// Set up query options with the where clause
@@ -48,29 +48,45 @@ module.exports = (sequelize, DataTypes) => {
 
 			// Apply pagination only if both page and size are provided
 			if (page && size) {
-			  const offset = (page - 1) * size;
-			  queryOptions.offset = offset;
-			  queryOptions.limit = size;
+				const offset = (page - 1) * size;
+				queryOptions.offset = offset;
+				queryOptions.limit = size;
 			}
 
 			// Define the fields and values to count
 			const fieldsToCount = {
-			  agreementLength: ["One-time", "12 Months", "24 Months"],
-			  planType: ["One-time", "Basic", "Pro", "Premium"],
-			  autopay: ["None", "CC", "ACH"],
-			  serviced: ["Pending", "Yes", "No"]
+				agreementLength: ["One-time", "12 Months", "24 Months"],
+				planType: ["One-time", "Basic", "Pro", "Premium"],
+				autopay: ["None", "CC", "ACH"],
+				serviced: ["Pending", "Yes", "No"],
 			};
 
 			// Create count promises for each field-value pair
 			const countPromises = [];
 			for (const [field, values] of Object.entries(fieldsToCount)) {
-			  values.forEach(value => {
-				const specificWhere = { ...where, [field]: value };
-				countPromises.push(
-				  Sale.count({ where: specificWhere })
-					.then(count => ({ field, value, count }))
-				);
-			  });
+				if (field === "serviced" && serviced && serviced !== "") {
+					// If serviced is filtered, only count the filtered value
+					const specificWhere = { ...where }; // Already includes serviced filter
+					countPromises.push(
+						Sale.count({ where: specificWhere }).then((count) => ({
+							field,
+							value: serviced,
+							count,
+						}))
+					);
+				} else {
+					// For other fields or unfiltered serviced, count all values
+					values.forEach((value) => {
+						const specificWhere = { ...where, [field]: value };
+						countPromises.push(
+							Sale.count({ where: specificWhere }).then((count) => ({
+								field,
+								value,
+								count,
+							}))
+						);
+					});
+				}
 			}
 
 			// Add the findAll promise for the sales list
@@ -82,22 +98,22 @@ module.exports = (sequelize, DataTypes) => {
 			// Extract sales (last result) and counts
 			const sales = results.pop();
 
-			// Initialize counts object
+			// Initialize counts object with all possible values set to 0
 			const counts = {
-			  agreementLength: {},
-			  planType: {},
-			  autopay: {},
-			  serviced: {}
+				agreementLength: { "One-time": 0, "12 Months": 0, "24 Months": 0 },
+				planType: { "One-time": 0, Basic: 0, Pro: 0, Premium: 0 },
+				autopay: { None: 0, CC: 0, ACH: 0 },
+				serviced: { Pending: 0, Yes: 0, No: 0 },
 			};
 
 			// Populate counts from results
-			results.forEach(result => {
-			  counts[result.field][result.value] = result.count;
+			results.forEach((result) => {
+				counts[result.field][result.value] = result.count;
 			});
 
 			// Return sales and counts together
 			return { sales, counts };
-		  }
+		}
 	}
 	Sale.init(
 		{

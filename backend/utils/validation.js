@@ -136,11 +136,11 @@ const validateUpdateSale = [
 	// initialPrice: Optional, if present must be a decimal number
 	check("initialPrice")
 		.optional()
-		.isDecimal({ min: 0 })
+		.isInt({ min: 0 })
 		.withMessage("Initial price must be a number greater than or equal to 0"),
 
 	// monthlyPrice: Optional, if present must be a decimal number
-	check("monthlyPrice").optional().isDecimal({ min: 1 }).withMessage("Monthly price must be a number greater than 1"),
+	check("monthlyPrice").optional().isInt({ min: 1 }).withMessage("Monthly price must be a number greater than 1"),
 
 	// autopay: Optional, if present must be one of the ENUM values
 	check("autopay").optional().isIn(["None", "CC", "ACH"]).withMessage("Autopay must be 'None', 'CC', or 'ACH'"),
