@@ -1,7 +1,7 @@
 import { useSessionStore } from "../../store/store";
 import { useState } from "react";
 import { Navigate } from "react-router-dom";
-import { ApiError } from "../../interfaces"; 
+import { ApiError } from "../../interfaces";
 
 function LoginFormPage() {
   const [email, setEmail] = useState<string>("");
@@ -14,15 +14,13 @@ function LoginFormPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({});
-
     try {
       await login({ email, password });
       // On success, clear form
       setEmail("");
       setPassword("");
     } catch (err) {
-      const apiError = err as ApiError; // Cast to ApiError
-     
+      const apiError = err as ApiError;
       if (apiError.errors) {
         setErrors(apiError.errors);
       } else {
@@ -31,11 +29,12 @@ function LoginFormPage() {
     }
   };
 
-  const handleInputChange = (setter: (value: string) => void) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    setErrors({});
-    setter(e.target.value);
-  };
-
+  const handleInputChange =
+    (setter: (value: string) => void) =>
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setErrors({});
+      setter(e.target.value);
+    };
 
   return (
     <form onSubmit={handleSubmit}>
