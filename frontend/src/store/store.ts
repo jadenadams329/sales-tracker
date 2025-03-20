@@ -1,52 +1,58 @@
-// src/store/store.ts
-import { createStore, combineReducers, applyMiddleware, compose, StoreEnhancer, Store } from 'redux';
-import  { thunk } from 'redux-thunk';
+import { create } from "zustand";
+import { User, ApiError, UserLogin } from "../interfaces";
+import { csrfFetch } from "../services/csrf";
 
-// Define types
-interface PreloadedState {
-  [key: string]: any;
+// Define the store's state interface
+interface SessionState {
+  user: User | null;
+  isLoading: boolean;
+  setUser: (user: User | null) => void;
+  clearUser: () => void;
+  login: (credentials: UserLogin) => Promise<void>;
+  restoreUser: () => Promise<void>;
 }
 
-declare global {
-  interface Window {
-    __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: typeof compose;
-    store?: Store;
-  }
-}
+// Create the store with proper typing
+export const useSessionStore = create<SessionState>((set) => ({
+  user: null,
+  isLoading: false,
+  setUser: (user: User | null) => set({ user }),
+  clearUser: () => set({ user: null }),
+  login: async (credentials: UserLogin) => {
+    set({ isLoading: true });
+    const { email, password } = credentials;
+    try {
+      const response = await csrfFetch("/api/session", {
+        method: "POST",
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      });
 
-// Create root reducer
-const rootReducer = combineReducers({
-  // Add reducers here as needed
-  // Empty for now as per instructions
-});
+      const data = await response.json();
+      const { user } = data as { user: User };
+      set({ user, isLoading: false });
+    } catch (err) {
+      set({ isLoading: false });
+      const response = err as Response;
+      const errorData = await response.json();
+      throw errorData as ApiError;
+    }
+  },
+  restoreUser: async () => {
+    set({ isLoading: true });
+    try {
+      const response = await csrfFetch("/api/session");
+      const data = await response.json();
 
-// Configure enhancer based on environment
-let enhancer: StoreEnhancer;
-
-if (import.meta.env.MODE === 'production') {
-  enhancer = applyMiddleware(thunk);
-} else {
-  // Dynamic import for redux-logger in development
-  const configureEnhancer = async () => {
-    const logger = (await import('redux-logger')).default;
-    const composeEnhancers = 
-      window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-    return composeEnhancers(applyMiddleware(thunk, logger));
-  };
-
-  // Set enhancer synchronously first, then update with async logger
-  enhancer = applyMiddleware(thunk);
-  configureEnhancer().then((devEnhancer) => {
-    enhancer = devEnhancer;
-  });
-}
-
-// Configure store function
-const configureStore = (preloadedState?: PreloadedState): Store => {
-  return createStore(rootReducer, preloadedState, enhancer);
-};
-
-// Export types
-export type RootState = ReturnType<typeof rootReducer>;
-
-export default configureStore;
+      const { user } = data as { user: User };
+      set({ user, isLoading: false });
+    } catch (err) {
+      set({ isLoading: false });
+      const response = err as Response;
+      const errorData = await response.json();
+      throw errorData as ApiError;
+    }
+  },
+}));
