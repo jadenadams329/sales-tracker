@@ -12,10 +12,18 @@ export interface UserLogin {
   }
 
   export interface ApiError {
-    // status: number;
     title: string;
     errors: {
       [key: string]: string | undefined;
     };
     message?: string;
   }
+
+  export interface UserSignup {
+    email: string;
+    password: string;
+    firstName: string;
+    lastName: string;
+    role: string;
+  }
+  

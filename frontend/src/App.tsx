@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 import LoginFormPage from "./pages/Login/LoginPage";
 import { useSessionStore } from "./store/SessionStore";
-
+import SignupPage from "./pages/SignUp/SignupPage";
 
 function Layout() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -28,6 +28,10 @@ const router = createBrowserRouter([
       {
         path: "/login",
         element: <LoginFormPage />,
+      },
+      {
+        path: "/signup",
+        element: <SignupPage />,
       },
     ],
   },
