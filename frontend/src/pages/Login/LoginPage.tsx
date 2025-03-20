@@ -1,7 +1,9 @@
-import { useSessionStore } from "../../store/store";
+import { useSessionStore } from "../../store/SessionStore";
 import { useState } from "react";
 import { Navigate } from "react-router-dom";
 import { ApiError } from "../../interfaces";
+import Form from "../../components/Form";
+import "../../components/Form.css";
 
 function LoginFormPage() {
   const [email, setEmail] = useState<string>("");
@@ -29,38 +31,42 @@ function LoginFormPage() {
     }
   };
 
-  const handleInputChange =
-    (setter: (value: string) => void) =>
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setErrors({});
-      setter(e.target.value);
-    };
+  const handleClearError = () => {
+    setErrors({});
+  };
+
+  const formFields = [
+    {
+      name: "email",
+      type: "email" as const,
+      label: "Email",
+      placeholder: "Enter your email",
+      required: true,
+      value: email,
+      onChange: setEmail,
+    },
+    {
+      name: "password",
+      type: "password" as const,
+      label: "Password",
+      placeholder: "Enter your password",
+      required: true,
+      value: password,
+      onChange: setPassword,
+    },
+  ];
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <input
-          type="email"
-          value={email}
-          onChange={handleInputChange(setEmail)}
-          placeholder="Email"
-          required
-        />
-      </div>
-      <div>
-        <input
-          type="password"
-          value={password}
-          onChange={handleInputChange(setPassword)}
-          placeholder="Password"
-          required
-        />
-      </div>
-      {errors.credential && <p style={{ color: "red" }}>{errors.credential}</p>}
-      <button type="submit" disabled={isLoading}>
-        {isLoading ? "Logging in..." : "Login"}
-      </button>
-    </form>
+    <div className="login-container">
+      <Form
+        fields={formFields}
+        onSubmit={handleSubmit}
+        submitButtonText="Login"
+        isLoading={isLoading}
+        globalError={errors.credential}
+        onClearError={handleClearError}
+      />
+    </div>
   );
 }
 

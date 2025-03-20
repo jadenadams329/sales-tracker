@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 import LoginFormPage from "./pages/Login/LoginPage";
-import { useSessionStore } from "./store/store";
-import "./App.css";
+import { useSessionStore } from "./store/SessionStore";
+
 
 function Layout() {
   const [isLoaded, setIsLoaded] = useState(false);
