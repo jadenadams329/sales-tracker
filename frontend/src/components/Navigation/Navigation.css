@@ -1,0 +1,113 @@
+.profile-dropdown {
+	/* Styles for when the menu is visible */
+  
+  border: 1px grey solid;
+  border-radius: 5px;
+  padding: 15px;
+  list-style-type: none;
+  margin-top: 5px;
+  margin-right: 25px;
+  background-color: white;
+  box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.4),
+              0px 1px 1px 0px rgba(0,0,0,0.28),
+              0px 1px 3px 0px rgba(0,0,0,0.24);
+}
+
+.profile-dropdown > li {
+  padding-bottom: 12px;
+}
+
+.userProfileLink {
+  text-decoration: none;
+  color: #00525E;
+
+}
+
+.userProfileLink:hover {
+  text-decoration: underline;
+  color: #00525E;
+}
+
+.profile-dropdown.hidden {
+	display: none;
+	/* Additional styles for when the menu is hidden */
+}
+
+.upButtonDiv{
+  border-top: 1px solid gray;
+  padding-top: 10px;
+}
+
+.upButtonDiv > button {
+  background-color: gray;
+  border: none;
+  color: white;
+  padding: 5px 15px;
+  cursor: pointer;
+}
+
+.upButtonDiv > button:hover {
+  background-color: #FF5A5F;
+}
+
+nav{
+  width: 100%;
+  height: 70px;
+  border-bottom: 2px solid lightgray;
+}
+
+ .navList {
+	list-style-type: none;
+	padding: 15px 20px 0 20px;
+  margin: 0;
+}
+
+.navListContainer{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sessionLinks{
+  display: flex;
+  gap: 50px;
+  align-items: center;
+}
+
+.logo{
+  width: 150px;
+  height: 35px;
+  object-fit: cover;
+}
+
+.profileButtonContainer{
+  display: flex;
+  align-items: center;
+}
+
+.userProfileButton{
+  background-color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.userProfileButton > i {
+  font-size: 25px;
+  color: #FF5A5F;
+}
+
+.navNewGroup{
+  text-decoration: none;
+  color: #00525E;
+}
+
+
+.modalButton {
+  background-color: white;
+  border: none;
+  font-size: 14pt;
+  cursor: pointer;
+}
+.modalButton:hover {
+  color: #00525E;
+}

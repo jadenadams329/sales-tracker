@@ -2,8 +2,8 @@ import { useSessionStore } from "../../store/SessionStore";
 import { useState } from "react";
 import { Navigate } from "react-router-dom";
 import { ApiError } from "../../interfaces";
-import Form from "../../components/Form";
-import "../../components/Form.css";
+import Form from "../../components/Form/Form";
+import "../../components/Form/Form.css";
 
 function LoginFormPage() {
   const [email, setEmail] = useState<string>("");

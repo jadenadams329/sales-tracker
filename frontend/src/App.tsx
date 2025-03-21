@@ -3,9 +3,10 @@ import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 import LoginFormPage from "./pages/Login/LoginPage";
 import { useSessionStore } from "./store/SessionStore";
 import SignupPage from "./pages/SignUp/SignupPage";
+import Navigation from "./components/Navigation/Navigation";
 
 function Layout() {
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const restoreUser = useSessionStore((state) => state.restoreUser);
 
   useEffect(() => {
@@ -14,7 +15,12 @@ function Layout() {
     });
   }, [restoreUser]);
 
-  return <>{isLoaded && <Outlet />}</>;
+  return (
+    <>
+      <Navigation isLoaded={isLoaded} />
+      {isLoaded && <Outlet />}
+    </>
+  );
 }
 
 const router = createBrowserRouter([

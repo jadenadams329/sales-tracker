@@ -11,6 +11,7 @@ interface SessionState {
   login: (credentials: UserLogin) => Promise<void>;
   restoreUser: () => Promise<void>;
   signup: (credentials: UserSignup) => Promise<void>;
+  logout: () => Promise<void>;
 }
 
 // Create the store with proper typing
@@ -74,6 +75,22 @@ export const useSessionStore = create<SessionState>((set) => ({
       const data = await response.json();
       const { user } = data as { user: User };
       set({ user, isLoading: false });
+    } catch (err) {
+      set({ isLoading: false });
+      const response = err as Response;
+      const errorData = await response.json();
+      throw errorData as ApiError;
+    }
+  },
+  logout: async () => {
+    set({ isLoading: true });
+    try {
+      const response = await csrfFetch("/api/session", {
+        method: "DELETE",
+      });
+      await response.json();
+      set({ user: null, isLoading: false });
+      return;
     } catch (err) {
       set({ isLoading: false });
       const response = err as Response;
