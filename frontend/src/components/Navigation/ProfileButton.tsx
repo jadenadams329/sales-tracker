@@ -3,7 +3,7 @@ import { FaChevronUp, FaChevronDown } from "react-icons/fa";
 import { User } from "../../interfaces";
 import { useSessionStore } from "../../store/SessionStore";
 import { useEffect, useState, useRef } from "react";
-
+import { useNavigate } from "react-router-dom";
 interface ProfileButtonProps {
 	user: User;
 }
@@ -13,7 +13,7 @@ function ProfileButton({ user }: ProfileButtonProps) {
 	const menuRef = useRef<HTMLDivElement>(null);
 
 	const logout = useSessionStore((state) => state.logout);
-
+	const navigate = useNavigate();
 	const toggleMenu = (e: React.MouseEvent) => {
 		e.stopPropagation();
 		setShowMenu(!showMenu);
@@ -22,6 +22,7 @@ function ProfileButton({ user }: ProfileButtonProps) {
 	const handleLogout = async (e: React.MouseEvent<HTMLButtonElement>) => {
 		e.preventDefault();
 		await logout();
+		navigate("/login");
 	};
 
 	useEffect(() => {
