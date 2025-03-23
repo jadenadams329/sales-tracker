@@ -4,6 +4,7 @@ import { Navigate } from "react-router-dom";
 import { ApiError } from "../../interfaces";
 import Form from "../../components/Form/Form";
 import "../../components/Form/Form.css";
+import "./LoginPage.css";
 
 function LoginFormPage() {
   const [email, setEmail] = useState<string>("");
@@ -21,6 +22,21 @@ function LoginFormPage() {
       // On success, clear form
       setEmail("");
       setPassword("");
+    } catch (err) {
+      const apiError = err as ApiError;
+      if (apiError.errors) {
+        setErrors(apiError.errors);
+      } else {
+        setErrors({ credential: "An unexpected error occurred" });
+      }
+    }
+  };
+
+  const handleDemoLogin = async () => {
+    setErrors({});
+    try {
+      
+      await login({ email: "demo.closer@goaptive.com", password: "password" });
     } catch (err) {
       const apiError = err as ApiError;
       if (apiError.errors) {
@@ -57,15 +73,22 @@ function LoginFormPage() {
   ];
 
   return (
-    <div className="login-container">
-      <Form
-        fields={formFields}
-        onSubmit={handleSubmit}
-        submitButtonText="Login"
-        isLoading={isLoading}
-        globalError={errors.credential}
-        onClearError={handleClearError}
-      />
+    <div className="login-page">
+      <div className="login-container">
+        <h1 className="login-header">Log in</h1>
+        <Form
+          fields={formFields}
+          onSubmit={handleSubmit}
+          submitButtonText="Login"
+          isLoading={isLoading}
+          globalError={errors.credential}
+          onClearError={handleClearError}
+          className="login-form"
+        />
+        <button onClick={handleDemoLogin} className="demo-button">
+          Sign in as Demo User
+        </button>
+      </div>
     </div>
   );
 }

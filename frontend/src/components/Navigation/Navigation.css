@@ -118,7 +118,7 @@
 .dropdown-logout {
   width: 100%;
   padding: 8px;
-  background-color: #0D210F;
+  background-color: #344C38;
   color: white;
   border: none;
   border-radius: 4px;
@@ -128,7 +128,7 @@
 }
 
 .dropdown-logout:hover {
-  background-color: #344C38;
+  background-color: #0D210F;
 }
 
 /* Mobile Menu Styles */

@@ -5,6 +5,7 @@ import { useSessionStore } from '../../store/SessionStore';
 import { ApiError } from '../../interfaces';
 import Form from '../../components/Form/Form';
 import '../../components/Form/Form.css';
+import './SignupPage.css';
 
 function SignupPage() {
     const [email, setEmail] = useState<string>("");
@@ -108,18 +109,22 @@ function SignupPage() {
         }
     ]
 
-  return (
-    <div>
-      <Form 
-        fields={formFields} 
-        onSubmit={handleSubmit} 
-        submitButtonText="Sign Up"
-        isLoading={isLoading}
-        globalError={errors.global}
-        onClearError={handleClearError}
-      />
-    </div>
-  )
+    return (
+        <div className="signup-page">
+            <div className="signup-container">
+                <h1 className="signup-header">Sign up</h1>
+                <Form 
+                    fields={formFields} 
+                    onSubmit={handleSubmit} 
+                    submitButtonText="Sign Up"
+                    isLoading={isLoading}
+                    globalError={errors.global}
+                    onClearError={handleClearError}
+                    className="signup-form"
+                />
+            </div>
+        </div>
+    )
 }
 
 export default SignupPage;
