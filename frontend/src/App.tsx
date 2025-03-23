@@ -4,6 +4,7 @@ import LoginFormPage from "./pages/Login/LoginPage";
 import { useSessionStore } from "./store/SessionStore";
 import SignupPage from "./pages/SignUp/SignupPage";
 import Navigation from "./components/Navigation/Navigation";
+import './App.css'
 
 function Layout() {
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
@@ -17,8 +18,12 @@ function Layout() {
 
   return (
     <>
-      <Navigation isLoaded={isLoaded} />
-      {isLoaded && <Outlet />}
+      <div className="navContainer">
+        <Navigation isLoaded={isLoaded} />
+      </div>
+      <div className="pageContainer">
+        {isLoaded && <Outlet />}
+      </div>
     </>
   );
 }
