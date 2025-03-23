@@ -1,4 +1,5 @@
 import { FaUserCircle } from "react-icons/fa";
+import { FaChevronUp, FaChevronDown } from "react-icons/fa";
 import { User } from "../../interfaces";
 import { useSessionStore } from "../../store/SessionStore";
 import { useEffect, useState, useRef } from "react";
@@ -9,7 +10,7 @@ interface ProfileButtonProps {
 
 function ProfileButton({ user }: ProfileButtonProps) {
 	const [showMenu, setShowMenu] = useState<boolean>(false);
-	const ulRef = useRef<HTMLUListElement>(null);
+	const menuRef = useRef<HTMLDivElement>(null);
 
 	const logout = useSessionStore((state) => state.logout);
 
@@ -27,7 +28,7 @@ function ProfileButton({ user }: ProfileButtonProps) {
 		if (!showMenu) return;
 
 		const closeMenu = (e: MouseEvent) => {
-			if (ulRef.current && !ulRef.current.contains(e.target as Node)) {
+			if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
 				setShowMenu(false);
 			}
 		};
@@ -36,22 +37,25 @@ function ProfileButton({ user }: ProfileButtonProps) {
 		return () => document.removeEventListener("click", closeMenu);
 	}, [showMenu]);
 
-	const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
+	const menuClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
 
 	return (
-		<div>
-			<button onClick={toggleMenu}>
+		<div className='profile-button-container'>
+			<button onClick={toggleMenu} className="profile-button">
 				<FaUserCircle />
+				{showMenu ? <FaChevronDown className="profile-arrow" /> : <FaChevronUp className="profile-arrow" />}
 			</button>
-			<ul ref={ulRef} className={ulClassName}>
-				<li>
-					{user.firstName} {user.lastName}
-				</li>
-				<li>{user.email}</li>
-				<li>
-					<button onClick={handleLogout}>Log Out</button>
-				</li>
-			</ul>
+			<div ref={menuRef} className={menuClassName}>
+				<div className="dropdown-user-info">
+					<div className="dropdown-user-name">
+						{user.firstName} {user.lastName}
+					</div>
+					<div className="dropdown-user-email">{user.email}</div>
+				</div>
+				<div className="dropdown-bottom">
+					<button onClick={handleLogout} className="dropdown-logout">Log Out</button>
+				</div>
+			</div>
 		</div>
 	);
 }
