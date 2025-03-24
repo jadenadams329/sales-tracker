@@ -5,7 +5,7 @@ import logo from "../../assets/logo.svg";
 import "./Navigation.css";
 import { useState } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
-
+import { useNavigate } from "react-router-dom";
 interface NavigationProps {
   isLoaded: boolean;
 }
@@ -13,10 +13,19 @@ interface NavigationProps {
 function Navigation({ isLoaded }: NavigationProps) {
   const user = useSessionStore((state) => state.user);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const logout = useSessionStore((state) => state.logout);
+  const navigate = useNavigate();
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
   };
+
+  const handleLogout = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    await logout();
+    setMobileMenuOpen(false);
+    navigate("/login");
+};
 
   const sessionLinks = user ? (
     <>
@@ -46,7 +55,7 @@ function Navigation({ isLoaded }: NavigationProps) {
         <div className="mobile-menu-user-email">{user.email}</div>
       </div>
       <div className="mobile-menu-bottom">
-        <button onClick={() => useSessionStore.getState().logout()} className="mobile-menu-logout">
+        <button onClick={handleLogout} className="mobile-menu-logout">
           Log Out
         </button>
       </div>
@@ -77,7 +86,7 @@ function Navigation({ isLoaded }: NavigationProps) {
           </button>
         </div>
       </div>
-      
+
       {/* Mobile menu and backdrop */}
       {mobileMenuOpen && <div className="mobile-backdrop" onClick={toggleMobileMenu}></div>}
       <div className={`mobile-menu ${mobileMenuOpen ? 'open' : ''}`}>
