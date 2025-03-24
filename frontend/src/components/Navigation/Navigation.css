@@ -1,0 +1,270 @@
+.navBar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #344C38;
+  border-bottom: 1px solid #344C38;
+  width: 100%;
+  height: 50px;
+}
+
+.navBar-links {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 25px;
+}
+
+
+.navBar-right {
+  margin-right: 15px;
+  display: flex;
+  align-items: center;
+}
+.navBar-right ul {
+  list-style: none;
+  display: flex;
+  gap: 10px;
+}
+
+.navBar-left {
+  margin-left: 15px;
+}
+
+.logoContainer {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  width: 100px;
+}
+
+.nav-links {
+  text-decoration: none;
+  color: white;
+}
+
+.nav-links:hover {
+  text-decoration: underline;
+}
+
+.profile-button-container {
+  position: relative;
+  display: inline-block;
+}
+
+.profile-button {
+  position: relative;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  color: white;
+  display: flex;
+  align-items: center;
+}
+
+.profile-arrow {
+  font-size: 12px;
+  margin-left: 5px;
+}
+
+.profile-dropdown {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 0;
+  margin: 0;
+  display: block;
+  z-index: 1000;
+  width: 220px;
+  overflow: hidden;
+}
+
+.profile-dropdown.hidden {
+  display: none;
+}
+
+.dropdown-user-info {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  border-bottom: 1px solid #eee;
+}
+
+.dropdown-user-name {
+  font-weight: bold;
+  font-size: 16px;
+  color: #344C38;
+}
+
+.dropdown-user-email {
+  font-size: 14px;
+  color: #666;
+}
+
+.dropdown-bottom {
+  padding: 15px;
+}
+
+.dropdown-logout {
+  width: 100%;
+  padding: 8px;
+  background-color: #344C38;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.dropdown-logout:hover {
+  background-color: #0D210F;
+}
+
+/* Mobile Menu Styles */
+
+.mobile-menu-button {
+  display: none;
+}
+
+.mobile-menu {
+  display: none;
+}
+
+.mobile-backdrop {
+  display: none;
+}
+
+/* Media query for mobile devices */
+@media screen and (max-width: 768px) {
+  .desktop-only {
+    display: none;
+  }
+
+  .mobile-backdrop {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+  }
+
+  .mobile-menu-button {
+    display: block;
+    margin-left: 10px;
+  }
+
+  .mobile-menu-button button {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+  }
+
+  .mobile-menu {
+    position: fixed;
+    top: 0;
+    right: -300px;
+    width: 250px;
+    height: 100vh;
+    background-color: white;
+    z-index: 1001;
+    transition: right 0.3s ease;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+    display: block;
+  }
+
+  .mobile-menu.open {
+    right: 0;
+  }
+
+  .mobile-menu-container {
+    display: flex;
+    flex-direction: column;
+    height: calc(100% - 51px); /* Height of menu minus header */
+  }
+
+  .mobile-menu-user-info {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .mobile-menu-bottom {
+    margin-top: auto;
+    padding: 20px;
+    border-top: 1px solid #eee;
+  }
+
+  .mobile-menu-user-name {
+    font-weight: bold;
+    font-size: 18px;
+  }
+
+  .mobile-menu-logout {
+    width: 100%;
+    padding: 10px;
+    background-color: #344C38;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+
+  .mobile-menu-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+  }
+
+  .mobile-menu-title {
+    font-weight: bold;
+    color: #0D210F;
+    font-size: 18px;
+  }
+
+  .mobile-menu-close {
+    background: transparent;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #0D210F;
+  }
+
+  .mobile-menu-links {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+  }
+
+  .mobile-nav-link {
+    color: #344C38;
+    text-decoration: none;
+    padding: 10px 0;
+    font-size: 16px;
+    border-bottom: 1px solid #eee;
+  }
+
+  .mobile-nav-link:hover {
+    color:#0D210F;
+    text-decoration: underline;
+  }
+}
