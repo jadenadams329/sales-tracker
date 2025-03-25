@@ -6,6 +6,8 @@ import { csrfFetch } from "../services/csrf";
 interface SessionState {
   user: User | null;
   isLoading: boolean;
+
+  // Actions
   setUser: (user: User | null) => void;
   clearUser: () => void;
   login: (credentials: UserLogin) => Promise<void>;
