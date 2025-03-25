@@ -17,9 +17,9 @@ interface SaleState {
   currentPage: number;
   pageSize: number;
   filters: SaleFilters;
-  
+
   // Actions
-  getSales: (filters?: SaleFilters) => Promise<void>;
+  setSales: (filters?: SaleFilters) => Promise<void>;
   clearSales: () => void;
   createSale: (sale: Omit<Sale, "id" | "userId" | "createdAt" | "updatedAt">) => Promise<void>;
   updateSale: (id: number, sale: Partial<Sale>) => Promise<void>;
@@ -41,7 +41,7 @@ export const useSaleStore = create<SaleState>((set, get) => ({
   pageSize: 20,
   filters: {},
 
-  getSales: async (filters?: SaleFilters) => {
+  setSales: async (filters?: SaleFilters) => {
     set({ isLoading: true });
     try {
       // Combine existing filters with new filters
@@ -59,8 +59,8 @@ export const useSaleStore = create<SaleState>((set, get) => ({
 
       const response = await csrfFetch(`/api/sales?${queryParams.toString()}`);
       const data = await response.json() as SaleResponse;
-      
-      set({ 
+
+      set({
         sales: data.data.sales,
         counts: data.data.counts,
         isLoading: false,
@@ -92,9 +92,9 @@ export const useSaleStore = create<SaleState>((set, get) => ({
         body: JSON.stringify(sale),
       });
       await response.json();
-      
+
       // Refresh the sales list after creating
-      await get().getSales(get().filters);
+      await get().setSales(get().filters);
     } catch (err) {
       set({ isLoading: false });
       const response = err as Response;
@@ -111,9 +111,9 @@ export const useSaleStore = create<SaleState>((set, get) => ({
         body: JSON.stringify(sale),
       });
       await response.json();
-      
+
       // Refresh the sales list after updating
-      await get().getSales(get().filters);
+      await get().setSales(get().filters);
     } catch (err) {
       set({ isLoading: false });
       const response = err as Response;
@@ -129,9 +129,9 @@ export const useSaleStore = create<SaleState>((set, get) => ({
         method: "DELETE",
       });
       await response.json();
-      
+
       // Refresh the sales list after deleting
-      await get().getSales(get().filters);
+      await get().setSales(get().filters);
     } catch (err) {
       set({ isLoading: false });
       const response = err as Response;
@@ -146,7 +146,7 @@ export const useSaleStore = create<SaleState>((set, get) => ({
   },
 
   clearFilters: () => {
-    set({ 
+    set({
       filters: {},
       currentPage: 1
     });
