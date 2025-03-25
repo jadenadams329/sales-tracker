@@ -20,6 +20,7 @@ interface SaleState {
   
   // Actions
   getSales: (filters?: SaleFilters) => Promise<void>;
+  clearSales: () => void;
   createSale: (sale: Omit<Sale, "id" | "userId" | "createdAt" | "updatedAt">) => Promise<void>;
   updateSale: (id: number, sale: Partial<Sale>) => Promise<void>;
   deleteSale: (id: number) => Promise<void>;
@@ -71,6 +72,16 @@ export const useSaleStore = create<SaleState>((set, get) => ({
       const errorData = await response.json();
       throw errorData as ApiError;
     }
+  },
+
+  clearSales: () => {
+    set({ sales: [], counts: {
+      agreementLength: { "One-time": 0, "12 Months": 0, "24 Months": 0 },
+      planType: { "One-time": 0, 'Basic': 0, 'Pro': 0, 'Premium': 0 },
+      autopay: { 'None': 0, 'CC': 0, 'ACH': 0 },
+      serviced: { 'Pending': 0, 'Yes': 0, 'No': 0 },
+    },
+    });
   },
 
   createSale: async (sale) => {

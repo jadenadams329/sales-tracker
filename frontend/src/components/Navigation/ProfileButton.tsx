@@ -4,6 +4,7 @@ import { User } from "../../interfaces";
 import { useSessionStore } from "../../store/SessionStore";
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSaleStore } from "../../store/SaleStore";
 interface ProfileButtonProps {
 	user: User;
 }
@@ -21,6 +22,7 @@ function ProfileButton({ user }: ProfileButtonProps) {
 
 	const handleLogout = async (e: React.MouseEvent<HTMLButtonElement>) => {
 		e.preventDefault();
+		useSaleStore.getState().clearSales();
 		await logout();
 		navigate("/login");
 	};
