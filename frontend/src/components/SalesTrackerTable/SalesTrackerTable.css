@@ -1,7 +1,6 @@
 .sales-table-container {
     width: 100%;
     overflow-x: auto;
-    border-radius: 8px;
     padding: 18px;
     -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
     box-sizing: border-box; /* Ensure padding is included in width calculation */
@@ -13,15 +12,14 @@
     border-collapse: collapse;
     background-color: #FFFFFF; /* Snow */
     box-shadow: 0 2px 4px rgba(13, 33, 15, 0.1); /* Forest Black with opacity */
-    border: 1px solid #B5C5B2; /* Sage */
-    margin: 0; /* Remove any default margins */
+    margin-bottom: 1rem;
 }
 
 .sales-table th,
 .sales-table td {
-    padding: 14px;
+    padding: 0.75rem;
     text-align: right;
-    border-bottom: 1px solid #B5C5B2; /* Sage */
+    border-bottom: 1px solid #e2e8f0;
     white-space: nowrap; /* Prevent text wrapping */
 }
 
@@ -29,6 +27,7 @@
 .sales-table th.action-column,
 .sales-table td.action-column {
     text-align: center;
+    align-items: center;
 }
 
 .sales-table th {
@@ -40,9 +39,9 @@
     z-index: 1;
 }
 
-.sales-table tr:hover {
+/* .sales-table tr:hover {
     background-color: #EBF7E8; /* Aloe */
-}
+
 
 /* Keep the header text right-aligned */
 .sales-table th {
@@ -55,29 +54,28 @@
     overflow: hidden;
 }
 
-.edit-button {
-    padding: 0.5rem;
-    background-color: #FFFFFF;
-    color: #344C38;
+/* Edit Button Styles */
+.action-column button {
+    background-color: white;
+    color: #344C38; /* Snow */
     border: none;
-    border-radius: 0.375rem;
+    border-radius: 4px;
     cursor: pointer;
+    font-size: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background-color 0.2s;
-    width: 32px;
-    height: 32px;
-    margin: auto; /* This will push the button to the right */
+    margin: 0 auto;
+    padding: 4px 8px;
+    transition: background-color 0.2s ease;
 }
 
-.edit-button:hover {
-    background-color: #EBF7E8;
+.action-column button:hover {
+    text-decoration: underline;/* Darker Pine for hover */
 }
 
-.edit-button svg {
-    width: 16px;
-    height: 16px;
+.action-column button:active {
+    transform: scale(0.98);
 }
 
 /* Responsive Design */
@@ -108,4 +106,35 @@
         padding: 6px;
         font-size: 13px; /* Even smaller font size for very small screens */
     }
-} 
+}
+
+.pagination-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.pagination-controls button {
+    padding: 0.5rem 1rem;
+    border: 1px solid #e2e8f0;
+    background-color: white;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.pagination-controls button:hover:not(:disabled) {
+    background-color: #f1f5f9;
+}
+
+.pagination-controls button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.page-info {
+    margin-left: 1rem;
+    color: #64748b;
+}
