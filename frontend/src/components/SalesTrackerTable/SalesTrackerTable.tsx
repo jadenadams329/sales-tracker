@@ -27,12 +27,18 @@ function SalesTrackerTable() {
 			}),
 			columnHelper.accessor("initialPrice", {
 				header: "Initial",
-				cell: (info) => `$${info.getValue().toFixed(0)}`,
+				cell: (info) => {
+					const value = info.getValue();
+					return typeof value === 'number' ? `$${value.toFixed(0)}` : `$${value}`;
+				},
 				size: 100,
 			}),
 			columnHelper.accessor("monthlyPrice", {
 				header: "Monthly",
-				cell: (info) => `$${info.getValue().toFixed(0)}`,
+				cell: (info) => {
+					const value = info.getValue();
+					return typeof value === 'number' ? `$${value.toFixed(0)}` : `$${value}`;
+				},
 				size: 100,
 			}),
 			columnHelper.accessor("autopay", {
