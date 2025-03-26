@@ -44,11 +44,11 @@ module.exports = (sequelize, DataTypes) => {
 			}
 
 			// Set up query options with the where clause
-			const queryOptions = { 
+			const queryOptions = {
 				where,
 				order: [
-					['createdAt', 'DESC'],
-					['serviceDate', 'DESC'],
+					['createdAt', 'ASC'],
+					['serviceDate', 'ASC'],
 					[sequelize.literal('CASE serviced WHEN "Pending" THEN 1 WHEN "Yes" THEN 2 WHEN "No" THEN 3 END')]
 				]
 			};
