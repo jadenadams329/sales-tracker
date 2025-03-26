@@ -44,7 +44,14 @@ module.exports = (sequelize, DataTypes) => {
 			}
 
 			// Set up query options with the where clause
-			const queryOptions = { where };
+			const queryOptions = { 
+				where,
+				order: [
+					['createdAt', 'DESC'],
+					['serviceDate', 'DESC'],
+					[sequelize.literal('CASE serviced WHEN "Pending" THEN 1 WHEN "Yes" THEN 2 WHEN "No" THEN 3 END')]
+				]
+			};
 
 			// Apply pagination only if both page and size are provided
 			if (page && size) {
