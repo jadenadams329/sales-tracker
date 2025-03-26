@@ -49,7 +49,7 @@ module.exports = (sequelize, DataTypes) => {
 				order: [
 					['createdAt', 'ASC'],
 					['serviceDate', 'ASC'],
-					[sequelize.literal('CASE serviced WHEN "Pending" THEN 1 WHEN "Yes" THEN 2 WHEN "No" THEN 3 END')]
+					[sequelize.literal('CASE serviced WHEN \'Pending\' THEN 1 WHEN \'Yes\' THEN 2 WHEN \'No\' THEN 3 END'), 'ASC']
 				]
 			};
 
