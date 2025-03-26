@@ -1,0 +1,140 @@
+.sales-table-container {
+    width: 100%;
+    overflow-x: auto;
+    padding: 18px;
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    box-sizing: border-box; /* Ensure padding is included in width calculation */
+}
+
+.sales-table {
+    width: 100%;
+    min-width: 470px; /* Minimum width to prevent squishing */
+    border-collapse: collapse;
+    background-color: #FFFFFF; /* Snow */
+    box-shadow: 0 2px 4px rgba(13, 33, 15, 0.1); /* Forest Black with opacity */
+    margin-bottom: 1rem;
+}
+
+.sales-table th,
+.sales-table td {
+    padding: 0.75rem;
+    text-align: right;
+    border-bottom: 1px solid #e2e8f0;
+    white-space: nowrap; /* Prevent text wrapping */
+}
+
+/* Center align Action column */
+.sales-table th.action-column,
+.sales-table td.action-column {
+    text-align: center;
+    align-items: center;
+}
+
+.sales-table th {
+    background-color: #344C38; /* Pine */
+    font-weight: 600;
+    color: #FFFFFF; /* Snow */
+    position: sticky; /* Keep headers visible when scrolling */
+    top: 0;
+    z-index: 1;
+}
+
+/* .sales-table tr:hover {
+    background-color: #EBF7E8; /* Aloe */
+
+
+/* Keep the header text right-aligned */
+.sales-table th {
+    text-align: right;
+}
+
+/* Style for the first row (header) */
+.sales-table thead tr:first-child {
+    border-radius: 4px 4px 0 0;
+    overflow: hidden;
+}
+
+/* Edit Button Styles */
+.action-column button {
+    background-color: white;
+    color: #344C38; /* Snow */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    padding: 4px 8px;
+    transition: background-color 0.2s ease;
+}
+
+.action-column button:hover {
+    text-decoration: underline;/* Darker Pine for hover */
+}
+
+.action-column button:active {
+    transform: scale(0.98);
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    .sales-table-container {
+        margin: 10px 0;
+        padding: 8px;
+        width: 100vw; /* Full viewport width */
+        margin-left: calc(-50vw + 50%); /* Center the container */
+        margin-right: calc(-50vw + 50%);
+    }
+
+    .sales-table th,
+    .sales-table td {
+        padding: 8px;
+        font-size: 14px; /* Slightly smaller font size on mobile */
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .sales-table-container {
+        padding: 4px;
+        margin: 0; /* Remove margins on very small screens */
+    }
+
+    .sales-table th,
+    .sales-table td {
+        padding: 6px;
+        font-size: 13px; /* Even smaller font size for very small screens */
+    }
+}
+
+.pagination-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.pagination-controls button {
+    padding: 0.5rem 1rem;
+    border: 1px solid #e2e8f0;
+    background-color: white;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.pagination-controls button:hover:not(:disabled) {
+    background-color: #f1f5f9;
+}
+
+.pagination-controls button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.page-info {
+    margin-left: 1rem;
+    color: #64748b;
+}

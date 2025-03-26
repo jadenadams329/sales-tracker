@@ -23,6 +23,16 @@ export default tseslint.config(
         'warn',
         { allowConstantExport: true },
       ],
+      overrides: [
+        {
+          files: [
+            "src/context/*.tsx"
+          ],
+          rules: {
+            'react-refresh/only-export-components': 'off'
+          }
+        }
+      ]
     },
   },
 )

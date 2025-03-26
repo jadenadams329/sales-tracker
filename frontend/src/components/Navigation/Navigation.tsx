@@ -6,6 +6,7 @@ import "./Navigation.css";
 import { useState } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { useSaleStore } from "../../store/SaleStore";
 interface NavigationProps {
   isLoaded: boolean;
 }
@@ -22,6 +23,7 @@ function Navigation({ isLoaded }: NavigationProps) {
 
   const handleLogout = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    useSaleStore.getState().clearSales();
     await logout();
     setMobileMenuOpen(false);
     navigate("/login");
